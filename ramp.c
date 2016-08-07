@@ -23,9 +23,19 @@ void Ramp_Init(Ramp* ramp, uint32_t scale)
 
 float Ramp_Calc(Ramp* ramp)
 {
-	if(ramp->count < ramp->scale)
+	if(ramp->direction == RAMP_DIR_UP)
 	{
-		ramp->count++;
+		if(ramp->count < ramp->scale)
+		{
+			ramp->count++;
+		}
+	}
+	else
+	{
+		if(ramp->count > 0)
+		{
+			ramp->count--;
+		}
 	}
 	ramp->output = ramp->count / (float)ramp->scale;
 	return ramp->output;
@@ -50,3 +60,14 @@ uint8_t Ramp_IsOverflow(Ramp* ramp)
 {
 	return ramp->count >= ramp->scale;
 }
+
+uint8_t Ramp_GetDirection(Ramp* ramp)
+{
+	return ramp->direction;
+}
+
+void Ramp_SetDirection(Ramp* ramp, uint8_t direction)
+{
+	ramp->direction = direction;
+}
+

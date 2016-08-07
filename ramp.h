@@ -23,12 +23,15 @@ extern "C" {
 
 #include <stdint.h>
 
+#define RAMP_DIR_UP 0
+#define RAMP_DIR_DOWN 1
 #define RAMP_SCALE_DEFAULT 1000
 	
 typedef struct Ramp
 {
 	uint32_t count;
 	uint32_t scale;
+	uint8_t direction;
 	float output;
 	void (*Init)(struct Ramp* ramp, uint32_t scale);
 	float (*Calc)(struct Ramp* ramp);
@@ -36,6 +39,8 @@ typedef struct Ramp
 	void (*ResetCounter)(struct Ramp* ramp);
 	void (*SetScale)(struct Ramp* ramp, uint32_t scale);
 	uint8_t (*IsOverflow)(struct Ramp* ramp);
+	uint8_t (*GetDirection)(struct Ramp* ramp);
+	void (*SetDirection)(struct Ramp* ramp, uint8_t direction);
 }Ramp;
 
 void Ramp_Init(Ramp* ramp, uint32_t scale);
@@ -44,19 +49,39 @@ void Ramp_SetCounter(Ramp* ramp, uint32_t count);
 void Ramp_ResetCounter(Ramp* ramp);
 void Ramp_SetScale(Ramp* ramp, uint32_t scale);
 uint8_t Ramp_IsOverflow(Ramp* ramp);
+uint8_t Ramp_GetDirection(Ramp* ramp);
+void Ramp_SetDirection(Ramp* ramp, uint8_t direction);
 
 #define RAMP_DEFAULT { \
 	.count = 0, \
 	.scale = RAMP_SCALE_DEFAULT, \
+	.direction = RAMP_DIR_UP, \
 	.output = 0, \
 	.Init = &Ramp_Init, \
 	.Calc = &Ramp_Calc, \
 	.SetCounter = &Ramp_SetCounter, \
 	.ResetCounter = &Ramp_ResetCounter, \
 	.SetScale = &Ramp_SetScale, \
-	.IsOverflow = Ramp_IsOverflow, \
+	.IsOverflow = &Ramp_IsOverflow, \
+	.GetDirection = &Ramp_GetDirection, \
+	.SetDirection = &Ramp_SetDirection, \
 } \
-	
+
+#define RAMP(SCALE) { \
+	.count = 0, \
+	.scale = SCALE, \
+	.direction = RAMP_DIR_UP, \
+	.output = 0, \
+	.Init = &Ramp_Init, \
+	.Calc = &Ramp_Calc, \
+	.SetCounter = &Ramp_SetCounter, \
+	.ResetCounter = &Ramp_ResetCounter, \
+	.SetScale = &Ramp_SetScale, \
+	.IsOverflow = &Ramp_IsOverflow, \
+	.GetDirection = &Ramp_GetDirection, \
+	.SetDirection = &Ramp_SetDirection, \
+} \
+
 #ifdef __cpluplus
 }
 #endif
