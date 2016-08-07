@@ -61,13 +61,13 @@ uint8_t Ramp_IsOverflow(Ramp* ramp)
 	return ramp->count >= ramp->scale;
 }
 
-uint8_t Ramp_GetDirection(Ramp* ramp)
+uint8_t Ramp_GetDir(Ramp* ramp)
 {
-	return ramp->direction;
+	return ramp->dir;
 }
 
-void Ramp_SetDirection(Ramp* ramp, uint8_t direction)
+void Ramp_SetDir(Ramp* ramp, uint8_t dir)
 {
-	ramp->direction = direction;
+	ramp->dir = dir;
 }
 
